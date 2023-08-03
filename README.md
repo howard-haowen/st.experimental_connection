@@ -1,10 +1,14 @@
-# 📦 Streamlit App Starter Kit 
-```
-⬆️ (Replace above with your app's name)
-```
+# 📦 Streamlit Connection
 
-Description of the app ...
+🎈Demo app for connecting Streamlit with Restful API
 
+- Author: [Haowen Jiang](https://howard-haowen.rohan.tw)
+- Data source: [REST Countries](https://restcountries.com/)
+- Dependencies:
+    - `streamlit`
+    - `requests`
+    - `tinydb` 
+    
 ## Demo App
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://starter-kit.streamlitapp.com/)
+- [Streamlit App](https://hwj-st-experimental-connection.streamlit.app/)
