@@ -1,22 +1,94 @@
-import requests
 import streamlit as st
-from tinydb_connection.connection import TinyDBConnection
+import sys
+sys.path.insert(0, ".")
+from connection import RestCountriesConnection, filter_by_population
 
-def fetch_dog_facts(num=100):
-    url = f"https://dog-api.kinduff.com/api/facts?number={num}"
-    facts = requests.get(url).json()['facts']
-    facts_dict = [{"fact": doc} for doc in facts]
-    return facts_dict
+st.title('🎈Demo app for connecting Streamlit with Restful API')
+st.markdown("""
+            - Author: [Haowen Jiang](https://howard-haowen.rohan.tw)
+            - Data source: [REST Countries](https://restcountries.com/)
+            - Dependencies:
+                - `streamlit`
+                - `requests`
+                - `tinydb` 
+            """)
 
-st.title('🎈Demo app for connecting TinyDB with Streamlit')
 
-st.write('Here are some fun facts about dogs!')
+# =================== #
+# Step 0
+# =================== #
+st.markdown("""
+            ## Step 0: Import dependencies 
+            
+            ```python
+            import streamlit as st
+            import sys
+            sys.path.insert(0, ".")
+            from connection import RestCountriesConnection
+            ```
+            
+            """)
+
+# =================== #
+# Step 1
+# =================== #
 
 conn = st.experimental_connection(
-        "tinydb",
-        type=TinyDBConnection
+        "api",
+        type=RestCountriesConnection,
         )
-data = fetch_dog_facts()
-conn.insert_multiple(data)
-df = conn.query('fact', 'smell')
-st.dataframe(df)
+
+st.markdown("""
+            ## Step 1: Initialize the connection
+            - Signature: `st.experimental_connection({connection_name}, type={connection_class})`
+            
+            ```python
+            conn = st.experimental_connection(
+            "api",
+            type=RestCountriesConnection,
+            )
+            ```
+            
+            """)
+
+# =================== #
+# Step 2 
+# =================== #
+
+fields = 'name,flag,population,region,capital,languages'
+res = conn.query('region', 'asia', fields)
+
+st.markdown("""
+            ## Step 2: Search by a region name with certain fields
+            - Signature: `conn.query({endpoint}, {query}, {fields})`
+
+            ```python
+            fields = 'name,flag,population,region,capital,languages'
+            res = conn.query('region', 'asia', fields)
+            ```
+            
+            """)
+st.info(f"Found {len(res)} countries from the database!")
+with st.expander("Click to see the results"):
+    st.write(res)
+    
+# =================== #
+# Step 3
+# =================== #
+
+filtered_res = filter_by_population(res, 1_000_000)
+
+st.markdown("""
+            ## Step 3: Filter results by population size using TinyDB search syntax 
+            - Signature: `filter_by_population({result_list}, {population})`
+
+            ```python
+            filtered_res = filter_by_population(res, 1_000_000)
+            ```
+            
+            """)
+
+st.info(f"Found {len(filtered_res)} countries from the database!")
+with st.expander("Click to see the results"):
+    st.write(filtered_res)
+
