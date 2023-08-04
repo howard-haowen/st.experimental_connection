@@ -24,7 +24,7 @@ st.markdown("""
             import streamlit as st
             import sys
             sys.path.insert(0, ".")
-            from connection import RestCountriesConnection
+            from connection import RestCountriesConnection, filter_by_population
             ```
             
             """)
